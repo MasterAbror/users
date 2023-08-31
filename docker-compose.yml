@@ -1,0 +1,29 @@
+version: '3'
+services:
+  db:
+    image: mysql/mysql-server:8.0
+    restart: always
+    ports:
+      - "3315:3316"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+      - "MYSQL_USER=${DB_USER}"
+      - "MYSQL_PASSWORD=${DB_PASSWORD}"
+      - "MYSQL_DATABASE=${DB_NAME}"   
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+  web:
+    build: .
+    ports:
+      - "0101:0101"
+    volumes:
+      - ".:/app"
+    depends_on:
+      - db
+    links:
+      - "db:database"
